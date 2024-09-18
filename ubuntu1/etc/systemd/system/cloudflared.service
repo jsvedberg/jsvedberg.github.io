@@ -1,0 +1,14 @@
+[Unit]
+Description=Cloudflare tunnel
+After=snap.docker.dockerd.service
+Requires=snap.docker.dockerd.service
+
+[Service]
+Restart=always
+ExecStartPre=-/snap/bin/docker exec %n stop
+ExecStartPre=-/snap/bin/docker rm %n
+ExecStart=/snap/bin/docker run --rm cloudflare/cloudflared:latest tunnel --no-autoupdate run --token <Tunnel token>
+ExecStop=/snap/bin/docker exec %n stop
+
+[Install]
+WantedBy=default.target
